@@ -1,52 +1,11 @@
 'use client'
 
 import { Megaphone, Clock, Pin, Bell } from 'lucide-react'
+import Link from 'next/link'
+import { getAllAnnouncements } from '@/app/data/announcementsData'
 
 export default function Announcements() {
-  const announcements = [
-    {
-      title: 'Jadwal Ujian Akhir Semester Genap 2025/2026',
-      description: 'Ujian akhir semester akan dilaksanakan mulai tanggal 1-10 Februari 2026. Siswa diharapkan mempersiapkan diri dengan baik.',
-      date: '20 Januari 2026',
-      priority: 'high',
-      pinned: true
-    },
-    {
-      title: 'Libur Semester dan Tahun Baru Imlek',
-      description: 'Sekolah akan libur pada tanggal 29 Januari 2026 dalam rangka perayaan Tahun Baru Imlek. Kegiatan belajar dimulai kembali tanggal 30 Januari 2026.',
-      date: '18 Januari 2026',
-      priority: 'medium',
-      pinned: true
-    },
-    {
-      title: 'Pembayaran SPP Bulan Februari',
-      description: 'Pembayaran SPP bulan Februari dapat dilakukan mulai tanggal 25 Januari s.d. 5 Februari 2026 melalui bank atau aplikasi.',
-      date: '17 Januari 2026',
-      priority: 'medium',
-      pinned: false
-    },
-    {
-      title: 'Pendaftaran Ekstrakurikuler Semester Genap',
-      description: 'Pendaftaran ekstrakurikuler untuk semester genap dibuka mulai 22 Januari 2026. Tersedia berbagai pilihan ekskul menarik.',
-      date: '16 Januari 2026',
-      priority: 'low',
-      pinned: false
-    },
-    {
-      title: 'Workshop Persiapan SBMPTN 2026',
-      description: 'Workshop khusus siswa kelas 12 akan diadakan setiap hari Sabtu mulai tanggal 27 Januari 2026. Gratis untuk semua siswa.',
-      date: '15 Januari 2026',
-      priority: 'high',
-      pinned: false
-    },
-    {
-      title: 'Lomba Karya Ilmiah Remaja Tingkat Sekolah',
-      description: 'Pendaftaran lomba KIR dibuka hingga 31 Januari 2026. Hadiah menarik menanti pemenang. Info lebih lanjut hubungi OSIS.',
-      date: '12 Januari 2026',
-      priority: 'medium',
-      pinned: false
-    }
-  ]
+  const announcements = getAllAnnouncements()
 
   const getPriorityColor = (priority) => {
     switch(priority) {
@@ -94,44 +53,46 @@ export default function Announcements() {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Announcements */}
           <div className="lg:col-span-2 space-y-6">
-            {announcements.map((announcement, index) => (
-              <div 
-                key={index}
-                className={`relative p-6 rounded-2xl border-2 ${getPriorityColor(announcement.priority)} hover:shadow-lg transition-all duration-300`}
+            {announcements.map((announcement) => (
+              <Link 
+                key={announcement.id}
+                href={`/pengumuman/${announcement.slug}`}
               >
-                {/* Pinned Badge */}
-                {announcement.pinned && (
-                  <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
-                    <Pin className="w-5 h-5 text-white" />
-                  </div>
-                )}
-
-                <div className="flex items-start gap-4">
-                  {/* Icon */}
-                  <div className={`w-12 h-12 ${announcement.priority === 'high' ? 'bg-red-100' : announcement.priority === 'medium' ? 'bg-yellow-100' : 'bg-blue-100'} rounded-xl flex items-center justify-center flex-shrink-0`}>
-                    <Megaphone className={`w-6 h-6 ${announcement.priority === 'high' ? 'text-red-600' : announcement.priority === 'medium' ? 'text-yellow-600' : 'text-blue-600'}`} />
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1">
-                    <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span className={`px-3 py-1 ${getPriorityBadge(announcement.priority)} rounded-full text-xs font-semibold`}>
-                        {getPriorityText(announcement.priority)}
-                      </span>
-                      <span className="text-gray-500 text-sm flex items-center gap-1">
-                        <Clock className="w-4 h-4" />
-                        {announcement.date}
-                      </span>
+                <div className={`relative p-6 rounded-2xl border-2 ${getPriorityColor(announcement.priority)} hover:shadow-lg transition-all duration-300 cursor-pointer`}>
+                  {/* Pinned Badge */}
+                  {announcement.pinned && (
+                    <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
+                      <Pin className="w-5 h-5 text-white" />
                     </div>
-                    <h3 className="text-lg font-bold text-gray-900 mb-2">
-                      {announcement.title}
-                    </h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      {announcement.description}
-                    </p>
+                  )}
+
+                  <div className="flex items-start gap-4">
+                    {/* Icon */}
+                    <div className={`w-12 h-12 ${announcement.priority === 'high' ? 'bg-red-100' : announcement.priority === 'medium' ? 'bg-yellow-100' : 'bg-blue-100'} rounded-xl flex items-center justify-center flex-shrink-0`}>
+                      <Megaphone className={`w-6 h-6 ${announcement.priority === 'high' ? 'text-red-600' : announcement.priority === 'medium' ? 'text-yellow-600' : 'text-blue-600'}`} />
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <span className={`px-3 py-1 ${getPriorityBadge(announcement.priority)} rounded-full text-xs font-semibold`}>
+                          {getPriorityText(announcement.priority)}
+                        </span>
+                        <span className="text-gray-500 text-sm flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          {announcement.date}
+                        </span>
+                      </div>
+                      <h3 className="text-lg font-bold text-gray-900 mb-2 hover:text-cyan-600 transition-colors">
+                        {announcement.title}
+                      </h3>
+                      <p className="text-gray-600 leading-relaxed">
+                        {announcement.description}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 
